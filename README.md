@@ -18,9 +18,8 @@ There is a console python application which does the same: https://github.com/Ol
 
 ## Features:
 - separate control of the correction intensity for luminance and color casts
-- automatic search for appropriate reference file in the given FF files folder
+- automatic search for appropriate reference file in the given reference files folder
 - adjustable radius of gaussian blur used to exclude dust from correction
-- can write corrected files to the output folder or overwrite source files
 - supports bayer, linear (demosaiced) and monochrome files
 - limit values in the processed file to the 'White level' tag values in Exif, or allow it to use full 16 bit range.
 - scale the result instead of clipping to fit it to camera range set in 'White level' tag in Exif, or to the full 16 bit range
