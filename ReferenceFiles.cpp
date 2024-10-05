@@ -83,7 +83,7 @@ void ReferenceFiles::createDB(const QString& referenceFilesRoot)
 			db.insert(filePath, QSharedPointer<FileInfo>(new FileInfo(filePath, metadata)));
 		}
 
-		emit signalRebuildingDBProgressChanged(i);
+		emit signalRebuildingDBProgressChanged(i + 1);
 	}
 
 	save(referenceFilesRoot);

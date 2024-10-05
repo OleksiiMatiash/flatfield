@@ -46,6 +46,11 @@ class Flatfield : public QMainWindow
 	void prepareProcessingParcel(const QList<QSharedPointer<SourceFileInfo>>& files) const;
 	void colorCalculateCommonBatchScaleCheckbox() const;
 
+signals:
+	void signalProcessingStarted(int total);
+	void signalProcessingFinished();
+	void signalProcessingProgressChanged(int progress);
+
 private slots:
 	void slotSourceFilesSelectRootClicked();
 	void slotSourceFilesRecurseSubfoldersChanged(bool recurse);

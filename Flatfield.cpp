@@ -139,6 +139,10 @@ void Flatfield::connectSignalsToSlots()
 	connect(processor, &Processor::signalProcessingStarted, this, &Flatfield::slotProcessingStarted);
 	connect(processor, &Processor::signalProcessingFinished, this, &Flatfield::slotProcessingFinished);
 	connect(processor, &Processor::signalProcessingProgressChanged, this, &Flatfield::slotProcessingGlobalProgressChanged);
+
+	connect(this, &Flatfield::signalProcessingStarted, this, &Flatfield::slotProcessingStarted);
+	connect(this, &Flatfield::signalProcessingFinished, this, &Flatfield::slotProcessingFinished);
+	connect(this, &Flatfield::signalProcessingProgressChanged, this, &Flatfield::slotProcessingGlobalProgressChanged);
 }
 
 void Flatfield::setSaveToViewsState() const
@@ -177,17 +181,26 @@ void Flatfield::slotSourceFilesSelectRootClicked()
 		return;
 	}
 
-	setUIState(false);
+	emit signalProcessingStarted(0);
 
 	ui.lineEditSourceFilesRoot->setText(folder);
 	settings.sourceFilesRoot = folder;
 	sourceFiles.clear();
 	pathToSourceFileMap.clear();
 
+	QList<QString> files;
+
 	QDirIterator iterator(settings.sourceFilesRoot, { "*.dng" }, QDir::Files, settings.sourceFilesRecurseSubfolders ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
 	while (iterator.hasNext())
 	{
-		const QString filePath = iterator.next();
+		files.append(iterator.next());
+	}
+
+	emit signalProcessingStarted(files.size());
+
+	for (int i = 0; i < files.size(); i++)
+	{
+		const QString filePath = files[i];
 		QSharedPointer<Metadata> metadata = MetadataReader::readMetadata(filePath);
 		if (metadata != nullptr)
 		{
@@ -195,11 +208,14 @@ void Flatfield::slotSourceFilesSelectRootClicked()
 			sourceFiles.append(sourceFileInfo);
 			pathToSourceFileMap[filePath] = sourceFileInfo;
 		}
+
+		emit signalProcessingProgressChanged(i + 1);
 	}
 
 	fillSourceList();
 	rematch();
-	setUIState(true);
+
+	emit signalProcessingFinished();
 }
 
 void Flatfield::slotSaveToOutputFolderClicked()
@@ -340,7 +356,7 @@ void Flatfield::rematch()
 		}
 	}
 	colorSourceList();
-    fillReferenceList(getSelectedSourceFiles());
+	fillReferenceList(getSelectedSourceFiles());
 }
 
 void Flatfield::start() const
@@ -449,8 +465,6 @@ void Flatfield::markReferenceList(const QList<QSharedPointer<SourceFileInfo>>& s
 		{
 			indicatorItem->setText("  ");
 		}
-
-		//		referenceFilesModel->setItem(i, 0, indicatorItem);
 	}
 }
 
