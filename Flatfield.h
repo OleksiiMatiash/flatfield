@@ -93,9 +93,9 @@ private slots:
 	void slotProcessingStarted(int total) const;
 	void slotProcessingFinished() const;
 	void slotProcessingGlobalProgressChanged(int progress) const;
-	void slotReferenceDBRebuildingStarted(int total) const;
-	void slotReferenceDBRebuildingProgressChanged(int progress) const;
-	void slotReferenceDBRebuildingFinished() const;
+	void slotFileScanStarted(int total) const;
+	void slotFileScanProgressChanged(int progress) const;
+	void slotFileScanFinished() const;
 	void slotReferenceFilesDBSizeChanged(int count);
 
 public:

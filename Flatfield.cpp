@@ -131,17 +131,17 @@ void Flatfield::connectSignalsToSlots()
 	connect(ui.lineEditSaveToSubfolderName, &QLineEdit::textChanged, this, &Flatfield::slotSaveProcessedFilesToSubfolderFolderNameChanged);
 	connect(ui.lineEditSaveToSubfolderName, &QLineEdit::textChanged, this, &Flatfield::slotSaveProcessedFilesToSubfolderFolderNameChanged);
 
-	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBStarted, this, &Flatfield::slotReferenceDBRebuildingStarted);
-	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBProgressChanged, this, &Flatfield::slotReferenceDBRebuildingProgressChanged);
-	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBFinished, this, &Flatfield::slotReferenceDBRebuildingFinished);
+	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBStarted, this, &Flatfield::slotFileScanStarted);
+	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBProgressChanged, this, &Flatfield::slotFileScanProgressChanged);
+	connect(&referenceFiles, &ReferenceFiles::signalRebuildingDBFinished, this, &Flatfield::slotFileScanFinished);
 	connect(&referenceFiles, &ReferenceFiles::signalDBSizeChanged, this, &Flatfield::slotReferenceFilesDBSizeChanged);
 
 	connect(processor, &Processor::signalProcessingStarted, this, &Flatfield::slotProcessingStarted);
 	connect(processor, &Processor::signalProcessingFinished, this, &Flatfield::slotProcessingFinished);
 	connect(processor, &Processor::signalProcessingProgressChanged, this, &Flatfield::slotProcessingGlobalProgressChanged);
 
-	connect(this, &Flatfield::signalProcessingStarted, this, &Flatfield::slotProcessingStarted);
-	connect(this, &Flatfield::signalProcessingFinished, this, &Flatfield::slotProcessingFinished);
+	connect(this, &Flatfield::signalProcessingStarted, this, &Flatfield::slotFileScanStarted);
+	connect(this, &Flatfield::signalProcessingFinished, this, &Flatfield::slotFileScanFinished);
 	connect(this, &Flatfield::signalProcessingProgressChanged, this, &Flatfield::slotProcessingGlobalProgressChanged);
 }
 
@@ -904,7 +904,7 @@ void Flatfield::slotProcessingFinished() const
 	setProcessButtonsVisibility(true);
 }
 
-void Flatfield::slotReferenceDBRebuildingStarted(int total) const
+void Flatfield::slotFileScanStarted(int total) const
 {
 	ui.progressBarProcessing->setValue(0);
 	ui.progressBarProcessing->setMaximum(total);
@@ -912,12 +912,12 @@ void Flatfield::slotReferenceDBRebuildingStarted(int total) const
 	setUIState(false);
 }
 
-void Flatfield::slotReferenceDBRebuildingProgressChanged(int progress) const
+void Flatfield::slotFileScanProgressChanged(int progress) const
 {
 	ui.progressBarProcessing->setValue(progress);
 }
 
-void Flatfield::slotReferenceDBRebuildingFinished() const
+void Flatfield::slotFileScanFinished() const
 {
 	ui.progressBarProcessing->setValue(0);
 
