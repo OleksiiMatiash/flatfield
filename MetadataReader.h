@@ -21,11 +21,12 @@ class MetadataReader
 		LensModel = 0xa434,
 		BlackLevel = 0xc61a,
 		WhiteLevel = 0xc61d,
-		ActiveArea = 0xc68d
+		ActiveArea = 0xc68d,
 	};
 
 	static int findRawIFD(Exiv2::ExifData* exifData, int* photometricInterpretation);
 
 public:
 	static QSharedPointer<Metadata> readMetadata(const QString& filename);
+	static void removeNewRawImageDigestTag(const QString& filename);
 };

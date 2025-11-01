@@ -4,6 +4,7 @@
 #include "ImageProcessorBayer.h"
 #include "ImageProcessorMono.h"
 #include "ImageProcessorRGB.h"
+#include "MetadataReader.h"
 
 
 void Processor::stopProcessing()
@@ -120,6 +121,12 @@ void Processor::save(const ProcessingItem& item, const SavingOptions& savingOpti
 	{
 		destinationFile.write((char*)imageBuffer.data(), item.sourceFile->metadata->dataSize);
 	}
+
+	destinationFile.close();
+
+	QString a = QDir::toNativeSeparators(destinationFilePath);
+
+	MetadataReader::removeNewRawImageDigestTag(a);
 }
 
 ImageProcessor* Processor::getImageProcessor(Metadata::RawTypeEnum rawType)
