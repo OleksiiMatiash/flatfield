@@ -32,7 +32,7 @@ protected:
 	static void scaleChannel(QList<float>& channel, float scale);
 	static void clipChannel(QList<float>& channel, uint16_t maxValue);
 	static float calculateMax(QList<float>& channel);
-	static float calculateScale(QList<float>& channel, uint16_t whiteLevel);
+	static float calculateScale(QList<float>& channel, uint16_t whiteLevel, uint16_t blackLevel);
 	static int getActiveAreaHeight(const QSharedPointer<Metadata>& metadata);
 	static int getActiveAreaWidth(const QSharedPointer<Metadata>& metadata);
 

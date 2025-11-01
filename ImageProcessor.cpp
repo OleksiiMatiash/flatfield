@@ -73,12 +73,14 @@ float ImageProcessor::calculateMax(QList<float>& channel)
 	return maximumValue;
 }
 
-float ImageProcessor::calculateScale(QList<float>& channel, uint16_t whiteLevel)
+float ImageProcessor::calculateScale(QList<float>& channel, uint16_t whiteLevel, uint16_t blackLevel)
 {
 	const float maxValue = calculateMax(channel);
-	if (maxValue > (float)whiteLevel)
+	const uint16_t whiteLevelMinusBlackLevel = whiteLevel - blackLevel;
+
+	if (maxValue > (float)whiteLevelMinusBlackLevel)
 	{
-		return (float)whiteLevel / maxValue;
+		return (float)whiteLevelMinusBlackLevel / maxValue;
 	}
 
 	return 1;
@@ -134,7 +136,7 @@ void ImageProcessor::scale(QList<QList<float>>& channels, const ProcessingParcel
 		{
 			for (int i = 0; i < channels.size(); i++)
 			{
-				const float currentChannelScale = calculateScale(channels[i], parcel.globalProcessingOptions.limitToWhiteLevel ? parcel.items[index].sourceFile->metadata->whiteLevels[i] : 0xffff);
+				const float currentChannelScale = calculateScale(channels[i], parcel.globalProcessingOptions.limitToWhiteLevel ? parcel.items[index].sourceFile->metadata->whiteLevels[i] : 0xffff, parcel.items[index].sourceFile->metadata->blackLevels[i]);
 				if (currentChannelScale < imageScale)
 				{
 					imageScale = currentChannelScale;
